@@ -8,7 +8,7 @@
     <HangulCard id="hangulcard" @optionSelected="handleOption" :msg="message" :hangul="hangul" :answer="answer" v-bind:choices="choices"
       v-bind:class="{ 'correct': correctAnswer, 'wrong': wrongAnswer, 'animated flipInY': show, 'animated flipOutY': hide}"/>
 
-    <div>
+    <div class="score">
       Correct {{correct}} - Incorrect {{incorrect}}
     </div>
   </div>
@@ -51,22 +51,29 @@ export default {
       },
       getRandomChoices: function(){
           var choices = [];
-          var randomIndex = this.randomIndex();
-          for(var i=0;i<4;i++){
-              randomIndex = this.randomIndex();
+          var randomIndexes = this.randomIndex();
+          while(randomIndexes.length > 0){
+              var randomIndex = randomIndexes.pop();
               choices.push({roman:this.allRomanized[randomIndex], hangul: this.allHangul[randomIndex]});
               console.log(randomIndex);
           }
           return choices;
       },
       randomIndex: function(){
+          var arr = [];
           var level = Math.floor(this.correct / 5)+5;
-          return Math.floor(
-              Math.random()*level
-          );
+
+          while(arr.length < 4){
+              var randomnumber = Math.floor(
+                  Math.random()*level
+              );
+              if(arr.indexOf(randomnumber) > -1) continue;
+              arr[arr.length] = randomnumber;
+          }
+
+          return arr;
       },
       handleOption: function(event){
-          console.log('event option ', event);
           if(event == true){
               this.correct++;
               this.correctAnswer = true;
@@ -105,5 +112,12 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.score {
+  border: 1px solid black;
+  margin: 20px 0px;
+  padding: 20px 0px;
+  min-width: 300px;
 }
 </style>

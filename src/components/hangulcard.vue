@@ -5,7 +5,7 @@
     <h2>{{ hangul }}</h2>
 
     <ul>
-      <li v-for="letter in choices" v-on:click="checkAnswer">
+      <li v-for="letter in choices" v-bind:key="letter.roman" v-on:click="checkAnswer">
         {{ letter.roman }}
       </li>
     </ul>
@@ -24,8 +24,6 @@ export default {
   methods: {
       checkAnswer: function(event) {
         if(event && event.srcElement.innerText === this.answer){
-           console.log(event.srcElement.innerText);
-           console.log(this.answer);
            this.$emit('optionSelected', true);
            return;
         }
